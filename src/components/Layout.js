@@ -1,18 +1,20 @@
 import React from "react";
-import Logo from './Logo';
+import { useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Container, Typography, Link, Box } from "@material-ui/core";
+import Logo from './Logo';
 
-export default function Layout({ children }) {
-  const url = window.location.href;
+function Layout({ children }) {
+  const urlLink = useSelector(state => state.link);
   const pathName = window.location.pathname;
 
   return (
     <Container style={{ marginBottom: '5rem' }}>
       <Box display="flex" justifyContent="space-between" marginY="4rem">
         <Logo />
-        {pathName.includes('scrum-master') &&
+        {pathName.includes('scrum-master') && urlLink &&
           <Typography variant="body2">
-            please share link of developers panel to the teammates: <Link href={url} target="_blank">{url}
+            please share link of developers panel to the teammates: <Link href={urlLink} >{urlLink}
             </Link>
           </Typography>}
       </Box>
@@ -20,3 +22,4 @@ export default function Layout({ children }) {
     </Container>
   )
 }
+export default withRouter(Layout);

@@ -1,14 +1,33 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Grid, TextField, makeStyles, Typography, Button, Box } from '@material-ui/core';
+import { useForm } from "react-hook-form";
+import { setLink } from './../actions';
+import { projectFirestore } from './../firebaseConfig';
 
-export default function StoryListForm() {
+export default function StoryListForm({ history }) {
+  const dispatch = useDispatch();
   const classes = useStyles();
-  const [value, setValue] = useState("");
+  const { register, handleSubmit, errors } = useForm();
 
-  console.log(value.split('\n'));
-
-  const handleValueChange = event => {
-    setValue(event.target.value);
+  const onSubmit = data => {
+    const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) }
+    console.log('Final Data', finalData)
+    projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
+      name: finalData.sessionName,
+      votersNumber: finalData.votersNumber
+    });
+    finalData.storyList.forEach((storyName, index) => {
+      projectFirestore.doc(`sessions/${finalData.sessionName}/stories/${storyName}`).set({
+        name: storyName,
+        point: 0,
+        status: index === 0 ? 2 : 0,
+        position: index + 1
+      });
+    })
+    const developerUrl = `${window.location.origin}/view-planning-as-developer/${finalData.sessionName}`
+    dispatch(setLink(developerUrl));
+    history.push(`/view-planning-as-scrum-master/${finalData.sessionName}`);
   }
 
   const numberControl = e => {
@@ -19,43 +38,56 @@ export default function StoryListForm() {
 
   return (
     <React.Fragment>
-      <Grid container >
-        <Grid item xs={6} className={classes.pr2}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Session Name"
-            inputProps={{ maxLength: 200 }} />
-        </Grid>
-        <Grid item xs={6} className={classes.pl2}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Number of voters"
-            onInput={(e) => (e.target.value = numberControl(e))}
-            type="number" />
-        </Grid>
-        <Grid item xs={12} className={classes.mt3}>
-          <Typography variant="body1" className={classes.mt3}>
-            Paste your story list below (Each line will be converted as a story)
-          </Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.mt3}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            multiline
-            rows={10}
-            onChange={handleValueChange} />
-        </Grid>
-        <Box className={classes.buttonContainer} width="100%">
-          <Grid item xs={4} >
-            <Button fullWidth variant="outlined" className={classes.button}>
-              Start Session
-          </Button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container >
+          <Grid item xs={6} className={classes.pr2}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Session Name"
+              name="sessionName"
+              error={Boolean(errors.sessionName)}
+              inputRef={register({ required: true })}
+              inputProps={{ maxLength: 200 }} />
+            {errors.sessionName && <Typography variant="caption" color="error">This field cannot be empty</Typography>}
           </Grid>
-        </Box>
-      </Grid>
+          <Grid item xs={6} className={classes.pl2}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Number of voters"
+              name="votersNumber"
+              error={Boolean(errors.votersNumber)}
+              inputRef={register({ required: true })}
+              onInput={(e) => (e.target.value = numberControl(e))}
+              type="number" />
+            {errors.votersNumber && <Typography variant="caption" color="error">This field cannot be empty</Typography>}
+          </Grid>
+          <Grid item xs={12} className={classes.mt3}>
+            <Typography variant="body1" className={classes.mt3}>
+              Paste your story list below (Each line will be converted as a story)
+          </Typography>
+          </Grid>
+          <Grid item xs={12} className={classes.mt3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              name="storyList"
+              multiline
+              error={Boolean(errors.storyList)}
+              rows={10}
+              inputRef={register({ required: true })} />
+            {errors.storyList && <Typography variant="caption" color="error">This field cannot be empty</Typography>}
+          </Grid>
+          <Box className={classes.buttonContainer} width="100%">
+            <Grid item xs={4} >
+              <Button type="submit" fullWidth variant="outlined" className={classes.button}>
+                Start Session
+          </Button>
+            </Grid>
+          </Box>
+        </Grid>
+      </form>
     </React.Fragment>
   )
 }

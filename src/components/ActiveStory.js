@@ -1,76 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Grid, Container, makeStyles } from '@material-ui/core';
 
 export default function ActiveStory() {
   const classes = useStyles();
+  const initialVotes = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 134, '?'];
+  const [voted, setVoted] = useState('');
+
+  const handleVote = value => {
+    setVoted(value);
+  }
 
   return (
     <React.Fragment>
       <p>Active Story</p>
       <Container className={classes.container}>
         <Grid container>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              1
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              2
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              3
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              4
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              5
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              6
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              7
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              8
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              9
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              10
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              11
-            </div>
-          </Grid>
-          <Grid item xs={3} className={classes.voteWrapper}>
-            <div className={classes.voteBox}>
-              12
-            </div>
-          </Grid>
+          {initialVotes.map(vote => {
+            return (
+              <Grid key={vote} item xs={3} className={classes.voteWrapper}>
+                <div className={classes.voteBox} onClick={() => handleVote(vote)}>
+                  {vote}
+                </div>
+              </Grid>
+            )
+          })}
           <Grid item xs={12} className={classes.totalVote}>
-            134 Voted
+            {voted ? `${voted} voted` : 'Please Vote!!'}
           </Grid>
         </Grid>
       </Container>

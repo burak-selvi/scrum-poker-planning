@@ -32,6 +32,10 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+const handleRowClick = data => {
+  console.log(data)
+}
+
 export default function TableWrapper({ columns, items }) {
   const classes = useStyles();
 
@@ -46,9 +50,9 @@ export default function TableWrapper({ columns, items }) {
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {items.length > 0 ?
+          {items && items.length > 0 ?
             items.map((row, index) => (
-              <StyledTableRow key={'row-' + index}>
+              <StyledTableRow key={'row-' + index} onClick={() => handleRowClick(row)}>
                 {
                   columns.map((column, i) => {
                     return <StyledTableCell key={"column-" + index + i} component="th" scope="row" style={{ paddingLeft: i === 0 && '48px', borderRight: i === columns.length - 1 ? 'none' : '1px solid black' }} align={column.align}>
