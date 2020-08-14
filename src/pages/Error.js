@@ -10,6 +10,6 @@ export default function Error() {
     </Typography>
     <Link to="/" style={{ textDecoration: 'none' }}>
       Go to homepage
-</Link>
+    </Link>
   </Box>
 }
