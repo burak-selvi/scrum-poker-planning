@@ -19,7 +19,7 @@ export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory
         if (isAllVoted) {
           finalPoint = point;
         } else {
-          finalPoint = 'Voted'
+          finalPoint = 'Voted';
         }
       }
       arr[index] = { name: `Voter ${index + 1} : `, position: index + 1, point: finalPoint };

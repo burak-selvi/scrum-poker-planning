@@ -2,8 +2,6 @@ import React from 'react';
 import TableWrapper from './TableWrapper';
 
 export default function StoryList({ stories, statuses, currentStory, setCurrentStory }) {
-  // console.log('Stories', stories)
-  // console.log('Statuses', statuses)
 
   const columns = [
     {
@@ -12,7 +10,7 @@ export default function StoryList({ stories, statuses, currentStory, setCurrentS
     },
     {
       title: 'Story Point',
-      rowMapper: (row) => row.point
+      rowMapper: (row) => row.point ? row.point : '-'
     },
     {
       title: 'Status',

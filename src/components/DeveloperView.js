@@ -19,7 +19,7 @@ export default function DeveloperView() {
   const [storyVotes, setStoryVotes] = useState([]);
   const [activeStory, setActiveStory] = useState(null);
   const [statuses, setStatuses] = useState([]);
-  const voteCheck = storyVotes.find(vote => vote.id === userId) || storyVotes.length < currentSession.votersNumber - 1;
+  const voteCheck = storyVotes.find(vote => vote.id === userId) || storyVotes.length < currentSession.votersNumber;
 
   useEffect(() => {
     if (!session) {
