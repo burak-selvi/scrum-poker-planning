@@ -1,12 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid, TextField, makeStyles, Typography, Button, Box } from '@material-ui/core';
 import { useForm } from "react-hook-form";
-import { setLink } from './../actions';
+import { setLink, setUser } from './../actions';
 import { projectFirestore } from './../firebaseConfig';
 
 export default function StoryListForm({ history }) {
   const dispatch = useDispatch();
+  const { userId } = useSelector(state => state.user);
   const classes = useStyles();
   const { register, handleSubmit, errors } = useForm();
 
@@ -25,8 +26,12 @@ export default function StoryListForm({ history }) {
         position: index + 1
       });
     })
-    const developerUrl = `${window.location.origin}/view-planning-as-developer/${finalData.sessionName}`
+    const developerUrl = `${window.location.origin}/view-planning-as-developer/${finalData.sessionName}`;
+    console.log('developerUrl', developerUrl)
+    localStorage.setItem('link', developerUrl);
+    localStorage.setItem('master', userId);
     dispatch(setLink(developerUrl));
+    dispatch(setUser({ userId, isMaster: true }));
     history.push(`/view-planning-as-scrum-master/${finalData.sessionName}`);
   }
 
