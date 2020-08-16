@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
-import { Grid, Container, makeStyles, Typography, Box } from '@material-ui/core';
-import { projectFirestore } from '../firebaseConfig';
+import { Grid, Container, makeStyles, Typography, Box, useMediaQuery } from '@material-ui/core';
+import { projectFirestore } from '../../firebaseConfig';
 
 export default function ActiveStory({ activeStory, currentVote, storyVotes, votersNumber }) {
+  const xsScreen = useMediaQuery('(max-width: 599px)');
   const classes = useStyles();
   const sessionName = useSelector(state => state.sessionName);
   const { userId, isMaster } = useSelector(state => state.user);
@@ -19,8 +20,6 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
       setVoted('');
     }
   }, [storyVotes, userId]);
-
-  console.log('storyVotes', storyVotes)
 
   const handleVote = value => {
     setVoted(value);
@@ -49,8 +48,8 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
   return (
     <React.Fragment>
       <p>Active Story</p>
-      <Container className={classes.container}>
-        <Box width="100%" marginTop="-1rem" marginBottom="1rem">
+      <Container className={classes.container} style={{ height: xsScreen ? 'auto' : '100%' }}>
+        <Box width="100%" marginBottom="1rem">
           <Typography>
             {activeStory?.name}
           </Typography>
@@ -58,7 +57,7 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
         <Grid container>
           {initialVotes.map(vote => {
             return (
-              <Grid key={vote} item xs={3} className={classes.voteWrapper} >
+              <Grid key={vote} item xs={4} lg={3} className={classes.voteWrapper} >
                 <div className={classes.voteBox} style={{ border: voted === vote ? '2px solid green' : '2px solid black' }} onClick={() => handleVote(vote)}>
                   {vote}
                 </div>
@@ -76,12 +75,11 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
 
 const useStyles = makeStyles(theme => ({
   container: {
-    height: '100%',
     border: '1px solid black',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   voteWrapper: {
     textAlign: 'center',

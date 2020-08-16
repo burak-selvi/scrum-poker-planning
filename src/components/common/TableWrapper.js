@@ -7,19 +7,16 @@ const useStyles = makeStyles(theme => ({
   },
   tableWrapper: {
     border: '1px solid black',
-    overflowX: 'auto',
-    height: '100%'
+    overflowX: 'auto'
   },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.grey[300],
-    // borderRight: '1px solid black'
   },
   body: {
     fontSize: 12,
-    // borderRight: '1px solid black'
 
   },
 }))(TableCell);
@@ -31,10 +28,6 @@ const StyledTableRow = withStyles((theme) => ({
     }
   }
 }))(TableRow);
-
-const handleRowClick = data => {
-  console.log(data)
-}
 
 export default function TableWrapper({ columns, items }) {
   const classes = useStyles();
@@ -52,7 +45,7 @@ export default function TableWrapper({ columns, items }) {
         <TableBody>
           {items && items.length > 0 ?
             items.map((row, index) => (
-              <StyledTableRow key={'row-' + index} onClick={() => handleRowClick(row)}>
+              <StyledTableRow key={'row-' + index}>
                 {
                   columns.map((column, i) => {
                     return <StyledTableCell key={"column-" + index + i} component="th" scope="row" style={{ paddingLeft: i === 0 && '48px', borderRight: i === columns.length - 1 ? 'none' : '1px solid black' }} align={column.align}>

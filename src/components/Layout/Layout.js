@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Typography, Link, Box } from "@material-ui/core";
-import { projectAuth } from './../firebaseConfig';
+import { projectAuth } from '../../firebaseConfig';
 import Logo from './Logo';
-import { setUser } from "../actions";
-import { setLink } from './../actions';
-import { getMasterId, getDeveloperLink } from "../utils";
+import { setUser, setLink } from "../../redux/actions";
+import { getMasterId, getDeveloperLink } from "../../utils";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
@@ -40,7 +39,7 @@ export default function Layout({ children }) {
       <Box display="flex" justifyContent="space-between" marginY="4rem">
         <Logo />
         {!!master && urlLink &&
-          <Typography variant="body2">
+          <Typography variant="body2" style={{ textAlign: 'end' }}>
             please share link of developers panel to the teammates: <Link href={urlLink} >{urlLink}
             </Link>
           </Typography>}

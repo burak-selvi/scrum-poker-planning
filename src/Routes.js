@@ -12,9 +12,7 @@ export default function Routes() {
     <Switch>
       <Redirect exact from="/" to="/add-story-list" />
       <Route exact path="/add-story-list" component={AddStoryList} />
-      {/* <Route exact path="/view-planning-as-scrum-master" component={ViewAsScrumMaster} /> */}
       <Route exact path="/view-planning-as-scrum-master/:sessionName" component={ViewAsScrumMaster} />
-      {/* <Route exact path="/view-planning-as-developer" component={ViewAsDeveloper} /> */}
       <Route exact path="/view-planning-as-developer/:sessionName" component={ViewAsDeveloper} />
       <Route path="/error" component={Error} />
       <Redirect to="/error" />
