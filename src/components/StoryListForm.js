@@ -12,7 +12,7 @@ export default function StoryListForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = data => {
-    const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) }
+    const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) };
     projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
       name: finalData.sessionName,
       votersNumber: finalData.votersNumber
@@ -86,7 +86,7 @@ export default function StoryListForm({ history }) {
             <Grid item xs={4} >
               <Button type="submit" fullWidth variant="outlined" className={classes.button}>
                 Start Session
-          </Button>
+              </Button>
             </Grid>
           </Box>
         </Grid>

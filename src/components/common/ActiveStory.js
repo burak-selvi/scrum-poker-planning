@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Grid, Container, makeStyles, Typography, Box, useMediaQuery } from '@material-ui/core';
 import { projectFirestore } from '../../firebaseConfig';
+import { initialVotes } from '../../constants';
 
 export default function ActiveStory({ activeStory, currentVote, storyVotes, votersNumber }) {
   const xsScreen = useMediaQuery('(max-width: 599px)');
   const classes = useStyles();
   const sessionName = useSelector(state => state.sessionName);
   const { userId, isMaster } = useSelector(state => state.user);
-  const initialVotes = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 134, '?'];
   const [voted, setVoted] = useState(currentVote);
   const leftVote = votersNumber - storyVotes?.length;
 
