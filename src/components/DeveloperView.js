@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, makeStyles } from '@material-ui/core';
-import { StoryList, ActiveStory } from '.';
-import { projectFirestore } from './../firebaseConfig';
+import { StoryList, ActiveStory, LoaderProgress } from '.';
+import { projectFirestore } from '../firebaseConfig';
 import { useParams } from 'react-router-dom';
-import { setSession } from '../actions';
+import { setSession } from '../redux/actions';
 
 export default function DeveloperView() {
   const dispatch = useDispatch();
@@ -12,14 +12,14 @@ export default function DeveloperView() {
   const { sessionName } = useParams();
   const session = useSelector(state => state.sessionName)
   const { userId } = useSelector(state => state.user);
+  const [loading, setLoading] = useState(true);
   const [currentStory, setCurrentStory] = useState({});
-  const [currentSession, setCurrentSession] = useState({});
+  const [currentSession, setCurrentSession] = useState(null);
   const [currentVote, setCurrentVote] = useState('');
   const [stories, setStories] = useState([]);
   const [storyVotes, setStoryVotes] = useState([]);
   const [activeStory, setActiveStory] = useState(null);
   const [statuses, setStatuses] = useState([]);
-  const voteCheck = storyVotes.find(vote => vote.id === userId) || storyVotes.length < currentSession.votersNumber;
 
   useEffect(() => {
     if (!session) {
@@ -28,8 +28,10 @@ export default function DeveloperView() {
   }, [session, sessionName, dispatch]);
 
   useEffect(() => {
+    setLoading(true);
     if (session) {
       projectFirestore.collection(`sessions/${session}/stories`).orderBy('position').onSnapshot(collection => {
+        setLoading(false);
         const data = collection.docs.map(doc => {
           if (doc.data().status === 2) {
             setActiveStory(doc.data());
@@ -79,18 +81,31 @@ export default function DeveloperView() {
     }
   }, [activeStory, session, userId]);
 
+  const checkVotes = () => {
+    let check = false;
+    const isUserVoted = storyVotes.some(vote => vote.id === userId);
+    const isMasterVoted = storyVotes.some(vote => vote.isMaster);
+    if (isMasterVoted) {
+      check = isUserVoted || storyVotes.length < currentSession.votersNumber;
+    } else {
+      check = isUserVoted || storyVotes.length < currentSession.votersNumber - 1;
+    }
+    return check;
+  }
+
 
   return (
     <React.Fragment>
-      {voteCheck ?
-        <Grid container>
-          <Grid item xs={7} >
-            <StoryList statuses={statuses} stories={stories} currentStory={currentStory} setCurrentStory={setCurrentStory} />
-          </Grid>
-          {activeStory && <Grid item xs={4} className={classes.ml5}>
-            <ActiveStory storyVotes={storyVotes} votersNumber={currentSession.votersNumber} currentVote={currentVote} activeStory={activeStory} />
-          </Grid>}
-        </Grid> : <p>No Voting</p>
+      {loading ? <LoaderProgress /> :
+        currentSession && checkVotes() ?
+          <Grid container>
+            <Grid item xs={7} >
+              <StoryList statuses={statuses} stories={stories} currentStory={currentStory} setCurrentStory={setCurrentStory} />
+            </Grid>
+            {activeStory && <Grid item xs={4} className={classes.ml5}>
+              <ActiveStory storyVotes={storyVotes} votersNumber={currentSession.votersNumber} currentVote={currentVote} activeStory={activeStory} />
+            </Grid>}
+          </Grid> : <p>No Voting</p>
       }
     </React.Fragment>
   )
