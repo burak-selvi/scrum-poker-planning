@@ -1,11 +1,7 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import {
-  AddStoryList,
-  ViewAsScrumMaster,
-  ViewAsDeveloper,
-  Error,
-} from "./pages";
+import { AddStoryList, ViewAsScrumMaster, ViewAsDeveloper, Error, } from "./pages";
+
 
 export default function Routes() {
   return (

@@ -35,7 +35,7 @@ export default function Logo() {
     <React.Fragment>
       <Dialog
         open={isOpen}
-        handleClose={closeDialog}>
+        onClose={closeDialog}>
         <DialogContent>
           Do you want to clear the session?
         </DialogContent>
