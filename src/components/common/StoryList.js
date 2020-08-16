@@ -1,7 +1,7 @@
 import React from 'react';
 import TableWrapper from './TableWrapper';
 
-export default function StoryList({ stories, statuses, currentStory, setCurrentStory }) {
+export default function StoryList({ stories, statuses }) {
 
   const columns = [
     {
