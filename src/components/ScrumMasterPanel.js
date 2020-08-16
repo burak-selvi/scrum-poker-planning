@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button, makeStyles } from '@material-ui/core';
 import { projectFirestore } from '../firebaseConfig';
 
-export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory, stories }) {
+export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory, stories, setActiveStory }) {
   const sessionName = useSelector(state => state.sessionName);
   const [finalScore, setFinalScore] = useState('');
   const classes = useStyles();
@@ -38,13 +38,13 @@ export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory
   }
 
   const handleFinalScoreChange = event => {
-    setFinalScore(parseInt(event.target.value));
+    setFinalScore(event.target.value);
   }
 
   const handleEndVoting = () => {
     const nextStory = stories.find(story => story.position === activeStory.position + 1);
     projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
-      point: finalScore,
+      point: parseInt(finalScore),
       status: 1
     });
     if (nextStory) {
@@ -54,6 +54,8 @@ export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory
       });
     }
     setFinalScore('');
+    isAllVoted = false;
+    setActiveStory(null)
   }
 
   return (

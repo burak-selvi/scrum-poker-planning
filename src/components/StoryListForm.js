@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, TextField, makeStyles, Typography, Button, Box } from '@material-ui/core';
 import { useForm } from "react-hook-form";
-import { setLink, setUser } from './../actions';
+import { setLink, setUser } from '../redux/actions';
 import { projectFirestore } from './../firebaseConfig';
 
 export default function StoryListForm({ history }) {
@@ -13,7 +13,6 @@ export default function StoryListForm({ history }) {
 
   const onSubmit = data => {
     const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) }
-    console.log('Final Data', finalData)
     projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
       name: finalData.sessionName,
       votersNumber: finalData.votersNumber
@@ -27,7 +26,6 @@ export default function StoryListForm({ history }) {
       });
     })
     const developerUrl = `${window.location.origin}/view-planning-as-developer/${finalData.sessionName}`;
-    console.log('developerUrl', developerUrl)
     localStorage.setItem('link', developerUrl);
     localStorage.setItem('master', userId);
     dispatch(setLink(developerUrl));

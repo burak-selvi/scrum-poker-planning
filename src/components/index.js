@@ -1,9 +1,10 @@
-import Layout from "./Layout";
+import Layout from "./Layout/Layout";
 import StoryListForm from "./StoryListForm";
 import ScrumMasterView from './ScrumMasterView';
 import DeveloperView from './DeveloperView';
-import StoryList from './StoryList';
+import StoryList from './common/StoryList';
 import ScrumMasterPanel from './ScrumMasterPanel';
-import ActiveStory from './ActiveStory';
+import ActiveStory from './common/ActiveStory';
+import LoaderProgress from './common/LoaderProgress';
 
-export { Layout, StoryListForm, ScrumMasterView, DeveloperView, StoryList, ScrumMasterPanel, ActiveStory };
+export { Layout, StoryListForm, ScrumMasterView, DeveloperView, StoryList, ScrumMasterPanel, ActiveStory, LoaderProgress };

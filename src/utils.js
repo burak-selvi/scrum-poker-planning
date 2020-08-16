@@ -5,3 +5,8 @@ export const getDeveloperLink = () => {
 export const getMasterId = () => {
   return localStorage.getItem('master');
 }
+
+export const removeStorages = () => {
+  localStorage.removeItem('link');
+  localStorage.removeItem('master');
+}
