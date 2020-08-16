@@ -1,5 +1,6 @@
 export const actionTypes = {
   SET_LINK: "SET_LINK",
   SET_SESSION: "SET_SESSION",
-  SET_USER: "SET_USER"
+  SET_USER: "SET_USER",
+  SET_ACTIVE_STORY: "SET_ACTIVE_STORY"
 }

@@ -3,7 +3,8 @@ import { actionTypes } from './actionTypes';
 const initialState = {
   user: { userId: '', isMaster: false },
   link: '',
-  sessionName: ''
+  sessionName: '',
+  activeStory: null
 };
 
 export default (state = initialState, action) => {
@@ -19,6 +20,10 @@ export default (state = initialState, action) => {
     case actionTypes.SET_SESSION:
       return {
         ...state, sessionName: action.payload
+      }
+    case actionTypes.SET_ACTIVE_STORY:
+      return {
+        ...state, activeStory: action.payload
       }
     default:
       return { ...state }

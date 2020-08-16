@@ -20,3 +20,10 @@ export const setUser = user => {
     payload: user
   }
 }
+
+export const setActiveStory = story => {
+  return {
+    type: actionTypes.SET_ACTIVE_STORY,
+    payload: story
+  }
+}
