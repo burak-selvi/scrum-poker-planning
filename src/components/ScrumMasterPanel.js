@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography, TextField, Button, makeStyles } from '@material-ui/core';
 import { projectFirestore } from '../firebaseConfig';
+import { setActiveStory } from '../redux/actions';
 
-export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory, stories, setActiveStory }) {
+export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber, stories }) {
+  const dispatch = useDispatch();
   const sessionName = useSelector(state => state.sessionName);
   const [finalScore, setFinalScore] = useState('');
   const classes = useStyles();
@@ -55,7 +57,7 @@ export default function ScrumMasterPanel({ storyVotes, votersNumber, activeStory
     }
     setFinalScore('');
     isAllVoted = false;
-    setActiveStory(null)
+    dispatch(setActiveStory(null));
   }
 
   return (
