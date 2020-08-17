@@ -5,7 +5,7 @@ const initialState = {
   link: '',
   sessionName: '',
   activeStory: null,
-  alert: { open: false, message: '' }
+  alert: { open: false, message: '', alertType: 'success' }
 };
 
 export default (state = initialState, action) => {
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
       }
     case actionTypes.SET_ALERT:
       return {
-        ...state, alert: { open: action.payload.isOpen, message: action.payload.message }
+        ...state, alert: { open: action.payload.isOpen, message: action.payload.message, alertType: action.payload.alertType }
       }
     default:
       return { ...state }

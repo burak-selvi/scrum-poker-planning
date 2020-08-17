@@ -11,7 +11,7 @@ export default function Layout({ children }) {
   const dispatch = useDispatch();
   const urlLink = useSelector(state => state.link);
   const { userId } = useSelector(state => state.user);
-  const { open, message } = useSelector(state => state.alert);
+  const { open, message, alertType } = useSelector(state => state.alert);
   const link = getDeveloperLink();
   const master = getMasterId();
 
@@ -37,12 +37,12 @@ export default function Layout({ children }) {
   }, [urlLink, link, dispatch]);
 
   const copyClipboard = () => {
-    dispatch(setAlert({ isOpen: true, message: 'Copied to clipboard' }));
+    dispatch(setAlert({ isOpen: true, message: 'Copied to clipboard', alertType: 'success' }));
     navigator.clipboard.writeText(urlLink);
   }
 
   const handleClose = () => {
-    dispatch(setAlert({ isOpen: false, message: '' }));
+    dispatch(setAlert({ isOpen: false, message: '', alertType: 'success' }));
   }
 
   return (
@@ -62,7 +62,7 @@ export default function Layout({ children }) {
       </Box>
       {children}
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <MuiAlert onClose={handleClose} severity="success" elevation={6} variant="filled">
+        <MuiAlert onClose={handleClose} severity={alertType} elevation={6} variant="filled">
           {message}
         </MuiAlert>
       </Snackbar>
