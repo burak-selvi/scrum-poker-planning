@@ -1,4 +1,4 @@
-The main dependencies of project;
+The main dependencies of project.
 -Material UI library for ui.
 -Redux for state management.
 -React Router for routing.
