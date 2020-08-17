@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button, makeStyles } from '@material-ui/core';
 import { projectFirestore } from '../firebaseConfig';
-import { setActiveStory } from '../redux/actions';
 
 export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber, stories }) {
-  const dispatch = useDispatch();
   const sessionName = useSelector(state => state.sessionName);
   const [finalScore, setFinalScore] = useState('');
   const classes = useStyles();
@@ -52,12 +50,18 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
     if (nextStory) {
       projectFirestore.doc(`sessions/${sessionName}/stories/${nextStory.id}`).update({
         point: 0,
-        status: 2
+        status: 2,
+        isLast: false
+      });
+    } else {
+      projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
+        point: 0,
+        status: 2,
+        isLast: true
       });
     }
     setFinalScore('');
     isAllVoted = false;
-    dispatch(setActiveStory(null));
   }
 
   return (

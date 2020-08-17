@@ -33,7 +33,7 @@ export default function ScrumMasterView() {
             <Grid item xs={12} md={5}>
               <StoryList statuses={statuses} stories={stories} />
             </Grid>
-            {activeStory && <React.Fragment>
+            {activeStory && !activeStory.isLast ? <React.Fragment>
               <Grid item xs={12} sm={5} md={3} className={classes.ml3}>
                 <ActiveStory
                   storyVotes={storyVotes}
@@ -48,7 +48,7 @@ export default function ScrumMasterView() {
                   storyVotes={storyVotes}
                   votersNumber={currentSession.votersNumber} />
               </Grid>
-            </React.Fragment>}
+            </React.Fragment> : <p className={classes.ml3}>To create new session click <b>Scrum Poker</b> logo on the top left</p>}
           </Grid>
           : <React.Fragment>
             <p>You cannot see this page as a developer</p>

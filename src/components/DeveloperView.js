@@ -44,7 +44,7 @@ export default function DeveloperView() {
             <Grid item xs={7} >
               <StoryList statuses={statuses} stories={stories} />
             </Grid>
-            {activeStory && <Grid item xs={4} className={classes.ml5}>
+            {activeStory && !activeStory.isLast && <Grid item xs={4} className={classes.ml5}>
               <ActiveStory
                 storyVotes={storyVotes}
                 votersNumber={currentSession.votersNumber}
