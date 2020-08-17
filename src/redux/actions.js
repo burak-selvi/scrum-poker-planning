@@ -27,3 +27,10 @@ export const setActiveStory = story => {
     payload: story
   }
 }
+
+export const setAlert = alert => {
+  return {
+    type: actionTypes.SET_ALERT,
+    payload: alert
+  }
+}

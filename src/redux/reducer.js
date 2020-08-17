@@ -4,7 +4,8 @@ const initialState = {
   user: { userId: '', isMaster: false },
   link: '',
   sessionName: '',
-  activeStory: null
+  activeStory: null,
+  alert: { open: false, message: '' }
 };
 
 export default (state = initialState, action) => {
@@ -24,6 +25,10 @@ export default (state = initialState, action) => {
     case actionTypes.SET_ACTIVE_STORY:
       return {
         ...state, activeStory: action.payload
+      }
+    case actionTypes.SET_ALERT:
+      return {
+        ...state, alert: { open: action.payload.isOpen, message: action.payload.message }
       }
     default:
       return { ...state }

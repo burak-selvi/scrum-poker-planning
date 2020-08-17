@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, TextField, makeStyles, Typography, Button, Box } from '@material-ui/core';
 import { useForm } from "react-hook-form";
-import { setLink, setUser } from '../redux/actions';
+import { setLink, setUser, setAlert } from '../redux/actions';
 import { projectFirestore } from './../firebaseConfig';
 
 export default function StoryListForm({ history }) {
@@ -24,12 +24,13 @@ export default function StoryListForm({ history }) {
         status: index === 0 ? 2 : 0,
         position: index + 1
       });
-    })
+    });
     const developerUrl = `${window.location.origin}/#/view-planning-as-developer/${finalData.sessionName}`;
     localStorage.setItem('link', developerUrl);
     localStorage.setItem('master', userId);
     dispatch(setLink(developerUrl));
     dispatch(setUser({ userId, isMaster: true }));
+    dispatch(setAlert({ isOpen: true, message: 'Oturum oluşturuldu' }));
     history.push(`/view-planning-as-scrum-master/${finalData.sessionName}`);
   }
 
@@ -69,7 +70,7 @@ export default function StoryListForm({ history }) {
           <Grid item xs={12} className={classes.mt3}>
             <Typography variant="body1" className={classes.mt3}>
               Paste your story list below (Each line will be converted as a story)
-          </Typography>
+            </Typography>
           </Grid>
           <Grid item xs={12} className={classes.mt3}>
             <TextField
