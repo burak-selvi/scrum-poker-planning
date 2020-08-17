@@ -25,7 +25,7 @@ export default function StoryListForm({ history }) {
         position: index + 1
       });
     })
-    const developerUrl = `${window.location.origin}/view-planning-as-developer/${finalData.sessionName}`;
+    const developerUrl = `${window.location.origin}/#/view-planning-as-developer/${finalData.sessionName}`;
     localStorage.setItem('link', developerUrl);
     localStorage.setItem('master', userId);
     dispatch(setLink(developerUrl));
