@@ -1,9 +1,9 @@
 The main dependencies of project;
-  -Material UI library for ui.
-  -Redux for state management.
-  -React Router for routing.
-  -React Hook Form for form handling.
-  -Firebase for backend and authentication.
+-Material UI library for ui.
+-Redux for state management.
+-React Router for routing.
+-React Hook Form for form handling.
+-Firebase for backend and authentication.
   
 Deployed with netlify: https://scrum-poker-planning.netlify.app
 
