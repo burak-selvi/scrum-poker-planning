@@ -4,34 +4,41 @@ import { Grid, TextField, makeStyles, Typography, Button, Box } from '@material-
 import { useForm } from "react-hook-form";
 import { setLink, setUser, setAlert } from '../redux/actions';
 import { projectFirestore } from './../firebaseConfig';
+import { useAllSessions } from './hooks';
 
 export default function StoryListForm({ history }) {
   const dispatch = useDispatch();
   const { userId } = useSelector(state => state.user);
   const classes = useStyles();
   const { register, handleSubmit, errors } = useForm();
+  const { allSessions } = useAllSessions();
 
   const onSubmit = data => {
-    const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) };
-    projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
-      name: finalData.sessionName,
-      votersNumber: finalData.votersNumber
-    });
-    finalData.storyList.forEach((storyName, index) => {
-      projectFirestore.doc(`sessions/${finalData.sessionName}/stories/${storyName}`).set({
-        name: storyName,
-        point: 0,
-        status: index === 0 ? 2 : 0,
-        position: index + 1
+    const sameSession = allSessions.find(s => s.name === data.sessionName);
+    if (sameSession) {
+      dispatch(setAlert({ isOpen: true, message: 'Please choose different name', alertType: 'error' }));
+    } else {
+      const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) };
+      projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
+        name: finalData.sessionName,
+        votersNumber: finalData.votersNumber
       });
-    });
-    const developerUrl = `${window.location.origin}/#/view-planning-as-developer/${finalData.sessionName}`;
-    localStorage.setItem('link', developerUrl);
-    localStorage.setItem('master', userId);
-    dispatch(setLink(developerUrl));
-    dispatch(setUser({ userId, isMaster: true }));
-    dispatch(setAlert({ isOpen: true, message: 'Oturum oluşturuldu' }));
-    history.push(`/view-planning-as-scrum-master/${finalData.sessionName}`);
+      finalData.storyList.forEach((storyName, index) => {
+        projectFirestore.doc(`sessions/${finalData.sessionName}/stories/${storyName}`).set({
+          name: storyName,
+          point: 0,
+          status: index === 0 ? 2 : 0,
+          position: index + 1
+        });
+      });
+      const developerUrl = `${window.location.origin}/#/view-planning-as-developer/${finalData.sessionName}`;
+      localStorage.setItem('link', developerUrl);
+      localStorage.setItem('master', userId);
+      dispatch(setLink(developerUrl));
+      dispatch(setUser({ userId, isMaster: true }));
+      dispatch(setAlert({ isOpen: true, message: 'Oturum oluşturuldu', alertType: 'success' }));
+      history.push(`/view-planning-as-scrum-master/${finalData.sessionName}`);
+    }
   }
 
   const numberControl = e => {
