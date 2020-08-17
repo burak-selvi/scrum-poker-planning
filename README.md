@@ -4,6 +4,8 @@ The main dependencies of project;
   -React Router for routing.
   -React Hook Form for form handling.
   -Firebase for backend and authentication.
+  
+Deployed with netlify: https://scrum-poker-planning.netlify.app
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
