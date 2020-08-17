@@ -99,7 +99,7 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
             onClick={handleEndVoting}
             variant="outlined"
             style={{ marginTop: '1rem' }}
-            disabled={!isAllVoted}>
+            disabled={!isAllVoted || !finalScore}>
             End Voting For Story 1
           </Button>
         </Box>
