@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography, TextField, Button, makeStyles } from '@material-ui/core';
 import { projectFirestore } from '../firebaseConfig';
+import { setActiveStory } from '../redux/actions';
 
 export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber, stories }) {
+  const dispatch = useDispatch();
   const sessionName = useSelector(state => state.sessionName);
   const [finalScore, setFinalScore] = useState('');
   const classes = useStyles();
@@ -11,7 +13,7 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
 
   const createVoters = (count) => {
     let arr = [];
-    for (let index = 0; index < count - 1; index++) {
+    for (let index = 0; index < count; index++) {
       let finalPoint = 'Not Voted';
       let point = storyVotes.find(voter => voter.position === index + 1)?.point;
       isAllVoted = storyVotes.some(voter => voter.isLastVote);
@@ -24,7 +26,7 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
       }
       arr[index] = { name: `Voter ${index + 1} : `, position: index + 1, point: finalPoint };
     }
-    const point = storyVotes.find(voter => voter.position === count)?.point;
+    const point = storyVotes.find(voter => voter.position === count + 1)?.point;
     let finalPoint = 'Not Voted';
     if (point) {
       if (isAllVoted) {
@@ -33,7 +35,7 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
         finalPoint = 'Voted';
       }
     }
-    arr[count - 1] = { name: `Scrum Master : `, position: count, point: finalPoint };
+    arr[count] = { name: `Scrum Master : `, position: count + 1, point: finalPoint };
     return arr;
   }
 
@@ -43,10 +45,6 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
 
   const handleEndVoting = () => {
     const nextStory = stories.find(story => story.position === activeStory.position + 1);
-    projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
-      point: parseInt(finalScore),
-      status: 1
-    });
     if (nextStory) {
       projectFirestore.doc(`sessions/${sessionName}/stories/${nextStory.id}`).update({
         point: 0,
@@ -54,9 +52,10 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
         isLast: false
       });
     } else {
+      dispatch(setActiveStory({ ...activeStory, point: parseInt(finalScore), status: 1, isLast: true }));
       projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
-        point: 0,
-        status: 2,
+        point: parseInt(finalScore),
+        status: 1,
         isLast: true
       });
     }
