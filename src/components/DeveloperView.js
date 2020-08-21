@@ -29,9 +29,9 @@ export default function DeveloperView() {
     const isUserVoted = storyVotes.some(vote => vote.id === userId);
     const isMasterVoted = storyVotes.some(vote => vote.isMaster);
     if (isMasterVoted) {
-      check = isUserVoted || storyVotes.length < currentSession.votersNumber;
+      check = isUserVoted || storyVotes.length < currentSession.votersNumber + 1;
     } else {
-      check = isUserVoted || storyVotes.length < currentSession.votersNumber - 1;
+      check = isUserVoted || storyVotes.length < currentSession.votersNumber;
     }
     return check;
   }
