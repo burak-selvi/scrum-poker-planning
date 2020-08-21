@@ -10,7 +10,7 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
   const sessionName = useSelector(state => state.sessionName);
   const { userId, isMaster } = useSelector(state => state.user);
   const [voted, setVoted] = useState(currentVote);
-  const leftVote = votersNumber - storyVotes?.length;
+  const leftVote = votersNumber - (storyVotes?.length - 1);
 
   useEffect(() => {
     const vote = storyVotes.find(vote => vote.id === userId);
@@ -34,7 +34,7 @@ export default function ActiveStory({ activeStory, currentVote, storyVotes, vote
       if (!isMasterVoted) {
         votesLength++;
       }
-      finalPosition = isMaster ? votersNumber : votesLength;
+      finalPosition = isMaster ? votersNumber + 1 : votesLength;
     }
     projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.name}/votes/${userId}`).set({
       name: userId,
