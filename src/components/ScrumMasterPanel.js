@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button, makeStyles } from '@material-ui/core';
 import { projectFirestore } from '../firebaseConfig';
-import { setActiveStory } from '../redux/actions';
 
 export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber, stories }) {
-  const dispatch = useDispatch();
   const sessionName = useSelector(state => state.sessionName);
   const [finalScore, setFinalScore] = useState('');
   const classes = useStyles();
@@ -26,11 +24,11 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
       }
       arr[index] = { name: `Voter ${index + 1} : `, position: index + 1, point: finalPoint };
     }
-    const point = storyVotes.find(voter => voter.position === count + 1)?.point;
+    const masterPoint = storyVotes.find(voter => voter.position === count + 1)?.point;
     let finalPoint = 'Not Voted';
-    if (point) {
+    if (masterPoint) {
       if (isAllVoted) {
-        finalPoint = point;
+        finalPoint = masterPoint;
       } else {
         finalPoint = 'Voted';
       }
@@ -44,6 +42,7 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
   }
 
   const handleEndVoting = () => {
+    let isLast;
     const nextStory = stories.find(story => story.position === activeStory.position + 1);
     if (nextStory) {
       projectFirestore.doc(`sessions/${sessionName}/stories/${nextStory.id}`).update({
@@ -51,14 +50,15 @@ export default function ScrumMasterPanel({ storyVotes, activeStory, votersNumber
         status: 2,
         isLast: false
       });
+      isLast = false;
     } else {
-      dispatch(setActiveStory({ ...activeStory, point: parseInt(finalScore), status: 1, isLast: true }));
-      projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
-        point: parseInt(finalScore),
-        status: 1,
-        isLast: true
-      });
+      isLast = true;
     }
+    projectFirestore.doc(`sessions/${sessionName}/stories/${activeStory.id}`).update({
+      point: parseInt(finalScore),
+      status: 1,
+      isLast
+    });
     setFinalScore('');
     isAllVoted = false;
   }
