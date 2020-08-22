@@ -18,7 +18,7 @@ export default function StoryListForm({ history }) {
     if (sameSession) {
       dispatch(setAlert({ isOpen: true, message: 'Please choose different name', alertType: 'error' }));
     } else {
-      const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list) };
+      const finalData = { ...data, votersNumber: parseInt(data.votersNumber), storyList: data.storyList.split('\n').filter(list => list.trim()) };
       projectFirestore.doc(`sessions/${finalData.sessionName}`).set({
         name: finalData.sessionName,
         votersNumber: finalData.votersNumber
