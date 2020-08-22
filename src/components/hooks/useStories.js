@@ -12,19 +12,24 @@ export default function useStories() {
   useEffect(() => {
     setLoading(true);
     if (session) {
-      projectFirestore.collection(`sessions/${session}/stories`).orderBy('position').onSnapshot(collection => {
-        setLoading(false);
-        const data = collection.docs.map(doc => {
-          if (doc.data().status === 2) {
-            dispatch(setActiveStory({ ...doc.data(), id: doc.id }));
-          }
-          return {
-            ...doc.data(),
-            id: doc.id
-          }
+      setInterval(() => {
+        projectFirestore.collection(`sessions/${session}/stories`).orderBy('position').onSnapshot(collection => {
+          setLoading(false);
+          const data = collection.docs.map(doc => {
+            if (doc.data().status === 2) {
+              dispatch(setActiveStory({ ...doc.data(), id: doc.id }));
+            }
+            if(doc.data().isLast){
+              dispatch(setActiveStory(null));
+            }
+            return {
+              ...doc.data(),
+              id: doc.id
+            }
+          });
+          setStories([...data]);
         });
-        setStories([...data]);
-      });
+      }, 2000);
     }
   }, [session, dispatch]);
   return { stories, loading };
